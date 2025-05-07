@@ -226,7 +226,7 @@ class FetchApp:
 
                 # Tell the robot to go there
                 # Limit the speed so we don't charge at the person.
-                se2_pose = SE2Pose(*drop_position_rt_vision, heading_rt_vision)
+                se2_pose = SE2Pose(*drop_position_rt_vision[:2], heading_rt_vision)
                 move_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
                     se2_pose.to_proto(),
                     frame_name=frame_helpers.VISION_FRAME_NAME,
@@ -310,7 +310,7 @@ class FetchApp:
                 print('Backing up and waiting...')
 
                 # Back up one meter and wait for the person to throw the object again.
-                se2_pose = SE2Pose(*wait_position_rt_vision, wait_heading_rt_vision)
+                se2_pose = SE2Pose(*wait_position_rt_vision[:2], wait_heading_rt_vision)
                 move_cmd = RobotCommandBuilder.synchro_se2_trajectory_command(
                     se2_pose.to_proto(),
                     frame_name=frame_helpers.VISION_FRAME_NAME,
@@ -326,7 +326,11 @@ class FetchApp:
                 block_for_trajectory_cmd(command_client, cmd_id, timeout_sec=5)
 
 
-if __name__ == '__main__':
+def main() -> None:
     spot = Spot(authentication_file='authentication.json')
     fetch_app = FetchApp(spot)
     fetch_app.run()
+
+
+if __name__ == '__main__':
+    main()
